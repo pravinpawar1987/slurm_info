@@ -1,2 +1,2 @@
 # slurm_info
-informatioon about slurm 
+information about slurm 
