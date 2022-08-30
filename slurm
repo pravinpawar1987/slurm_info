@@ -1,11 +1,5 @@
 #!/bin/bash
 #
-# Frontend wrapper for the most often needed but
-# un{usable,readable,informative} SLURM commands.
-# tapio.leipala@aalto.fi
-
-# format variables for customizing output
-#
 # for example, if 'slurm partition' should differentiate node features, add 
 #     fmt_s_parts="%10P %.11l %.15F %10f %N"
 # into the following file
