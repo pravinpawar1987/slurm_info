@@ -1,0 +1,51 @@
+#!/bin/bash
+################################################################################
+######################## Microway Cluster Management Software (MCMS) for OpenHPC
+################################################################################
+#
+# Copyright (c) 2015 by Microway, Inc.
+#
+# This file is part of Microway Cluster Management Software (MCMS) for OpenHPC.
+#
+#    MCMS for OpenHPC is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    MCMS for OpenHPC is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with MCMS.  If not, see <http://www.gnu.org/licenses/>
+#
+################################################################################
+
+
+################################################################################
+#
+# Print detailed information about the available compute nodes
+#
+################################################################################
+
+
+# Set output widths based on terminal size.
+available_columns=$(tput cols)
+if [[ $available_columns -le 80 ]]; then
+    format="%15N %11T %.4c %.8z %.9m %.10d %8G %15f"
+else
+    # The default output is 80 columns wide. Calculate the remaining space
+    # (leaving a little extra space to prevent wrapping to next line).
+    extra_columns=$(( $available_columns - 85 ))
+    margin=$(( $extra_columns / 8 ))
+
+    gres_length=$(( 15 + $margin * 4 ))
+    feature_length=$(( 8 + $margin * 3 ))
+
+    format="%15N %11T %.4c %.8z %.9m %.10d %${gres_length}G %${feature_length}f"
+fi
+
+
+sinfo --format="${format}"
+

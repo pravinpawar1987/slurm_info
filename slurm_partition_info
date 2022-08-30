@@ -1,0 +1,71 @@
+#!/bin/bash
+################################################################################
+######################## Microway Cluster Management Software (MCMS) for OpenHPC
+################################################################################
+#
+# Copyright (c) 2015 by Microway, Inc.
+#
+# This file is part of Microway Cluster Management Software (MCMS) for OpenHPC.
+#
+#    MCMS for OpenHPC is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    MCMS for OpenHPC is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with MCMS.  If not, see <http://www.gnu.org/licenses/>
+#
+################################################################################
+
+
+################################################################################
+#
+# Print detailed information about the available SLURM job partitions (queues)
+#
+################################################################################
+
+
+# Set output widths based on terminal size.
+available_columns=$(tput cols)
+if [[ $available_columns -le 80 ]]; then
+    # print the following fields for each SLURM partition:
+    #
+    #  * partition name
+    #  * partition available? (up / down)
+    #  * node count (allocated / idle)
+    #  * CPU counts: sockets, cores, threads
+    #  * memory available on each node
+    #  * tmp disk available on each node
+    #  * maximum timelimit for each job
+    #  * allowed job sizes (numbers of nodes)
+    #
+    format="%12P %5a %.10A %.8z %.9m %.10d %.13l %.12s"
+else
+    # The default output is 80 columns wide. Calculate the remaining space
+    # (leaving a little extra space to prevent wrapping to next line).
+    extra_columns=$(( $available_columns - 85 ))
+
+    base="%12P %5a %.10A %.8z %.9m %.10d"
+
+    # If space allows, add the following fields:
+    #
+    #  * does this partition allow shared jobs?
+    #  * partition priority
+    #
+    if [[ ${extra_columns} -ge 21 ]]; then
+        format="${base} %.7h %.13l %.14s %.9p"
+    elif [[ ${extra_columns} -ge 10 ]]; then
+        format="${base} %.7h %.13l %.14s"
+    else
+        format="${base} %.13l %.14s"
+    fi
+fi
+
+
+sinfo --format="${format}"
+

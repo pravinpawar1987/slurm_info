@@ -1,0 +1,47 @@
+#!/bin/bash
+################################################################################
+######################## Microway Cluster Management Software (MCMS) for OpenHPC
+################################################################################
+#
+# Copyright (c) 2015-2016 by Microway, Inc.
+#
+# This file is part of Microway Cluster Management Software (MCMS) for OpenHPC.
+#
+#    MCMS for OpenHPC is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    MCMS for OpenHPC is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with MCMS.  If not, see <http://www.gnu.org/licenses/>
+#
+################################################################################
+
+
+################################################################################
+#
+# Print detailed information about any compute nodes that are down
+#
+################################################################################
+
+
+# Set output widths based on terminal size.
+available_columns=$(tput cols)
+if [[ $available_columns -le 85 ]]; then
+    format="%20E %9u %19H %N"
+else
+    # The default output is 80 columns wide. Calculate the remaining space
+    # (leaving a little extra space to prevent wrapping to next line).
+    extra_columns=$(( $available_columns - 85 ))
+    reason_length=$(( 20 + $extra_columns ))
+
+    format="%${reason_length}E %12U %19H %10t %N"
+fi
+
+sinfo --format="${format}"
+
